@@ -100,8 +100,7 @@ endm
     msgmenu                  db '1. [Suma y Resta] con numeros en rango -16384 a 16383',10,13
                              db '2. [Multiplicacion Y Division] con numeros en rango -128 a 127',10,13
                              db '3. Realizar operaciones logicas con numeros hexadecimales',10,13
-                             db '4. Primeros 16 numeros de la serie alternada',10,13
-                             db '5. Salir',10,13,'$'
+                             db '4. Salir',10,13,'$'
     opcionescogida           db 0,10,13,'$'
     ; relacionado a leer numeros decimales
     flgnegativo              db 0
@@ -165,9 +164,7 @@ endm
     two                      db 2
     hex1                     db 0
     hex2                     db 0
-    ; relacionado con la serie
-    msgserie                 db 'Resultado serie alternada: $'
-    limserie                 dw 11h
+
 .code
 
 main proc near
@@ -208,9 +205,6 @@ main proc near
                                 je                link_opcion_3
 
                                 cmp               opcionescogida[0],'4'
-                                je                link_opcion_4
-
-                                cmp               opcionescogida[0],'5'
                                 jne               autenticado
                                 imprimir          msgsalida
                                 imprimir          msgprestecla
@@ -221,8 +215,6 @@ main proc near
                                 jmp               opcion_2
     link_opcion_3:              
                                 jmp               opcion_3
-    link_opcion_4:              
-                                jmp               opcion_4
     ; opciones
     opcion_1:                   
                                 call              prc_limpiar_pantalla
@@ -332,34 +324,6 @@ main proc near
                                 imprimir          newline
 
                                 jmp               volver_al_menu
-
-    opcion_4:                   
-                                call              prc_limpiar_pantalla
-                                call              prc_cambiar_color
-                                imprimir          msgserie
-                                push              cx
-                                mov               cx, 1
-    serie:                      
-                                mov               ax, cx
-                                and               ax, 1b
-                                cmp               ax, 1b
-                                jne               res_positivo
-                                imprimir_caracter '-'
-    res_positivo:               
-
-                                imprimir_numero   cx
-                                imprimir_caracter ','
-                                imprimir_caracter ' '
-
-                                inc               cx
-                                cmp               cx, limserie
-                                jne               serie
-                                imprimir_caracter 8
-                                imprimir_caracter 8
-                                imprimir_caracter ' '
-                                imprimir_caracter 8
-                                imprimir          newline
-                                jmp               volver_al_menu
                                 
     volver_al_menu:             
                                 imprimir          msgprestecla
@@ -392,9 +356,10 @@ prc_cambiar_color proc
                                 mov               ah, 06h
                                 xor               al, al
                                 xor               cx, cx
+                                mov dh, 79
+                                mov dl, 79
                                 mov               dx, 184fh
-                                mov               bh, 0ah                                  ; color a poner
-                                mov               bl, 01h
+                                mov               bh, 17h                   ; color a poner
                                 int               10h
                                 ret
 prc_cambiar_color endp

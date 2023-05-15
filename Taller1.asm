@@ -97,8 +97,8 @@ endm
     msgcontraseniaincorrecta db 'Las tres contrasenias ingresadas fueron incorrectas',10,13,'$'
     contraseniaingresada     db 'ci123456e','$'
     ;relacionado al menu
-    msgmenu                  db '1. [Suma y Resta] con numeros en rango -16384 a 16383',10,13
-                             db '2. [Multiplicacion Y Division] con numeros en rango -128 a 127',10,13
+    msgmenu                  db '1. Realizar Suma y Resta con numeros en rango -16384 a 16383',10,13
+                             db '2. Realizar Multiplicacion y Division con numeros en rango -128 a 127',10,13
                              db '3. Realizar operaciones logicas con numeros hexadecimales',10,13
                              db '4. Salir',10,13,'$'
     opcionescogida           db 0,10,13,'$'

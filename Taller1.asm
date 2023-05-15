@@ -171,10 +171,9 @@ main proc near
                                 cargar_datos
                                 mov               cx, nummaxintentos
                                 call              prc_limpiar_pantalla
-    ; Autentica la contraseña ingresada por teclado
     autenticacion:              
                                 imprimir          msgcontrasenia
-                                leer_string       contraseniaingresada, 7                   ; en realidad lee 6 caracteres y el enter
+                                leer_string       contraseniaingresada, 7                 
                                 push              cx
                                 comparar_string   contrasenia, contraseniaingresada[2],6
                                 je                autenticado
@@ -350,7 +349,7 @@ prc_cambiar_color proc
                                 int               10h
 
                                 mov               ax, 1003h
-                                mov               bx, 0                                     ; desactiva los parpadeos
+                                mov               bx, 0                                     
                                 int               10h
                          
                                 mov               ah, 06h
@@ -359,7 +358,7 @@ prc_cambiar_color proc
                                 mov dh, 79
                                 mov dl, 79
                                 mov               dx, 184fh
-                                mov               bh, 17h                   ; color a poner
+                                mov               bh, 17h                
                                 int               10h
                                 ret
 prc_cambiar_color endp
@@ -380,7 +379,7 @@ prc_leer_string endp
 prc_leer_hex proc
                                 mov               cx ,2
                                 mov               bl, 0
-                                mov               ax ,0                                     ; limpiar ax
+                                mov               ax ,0                                     
     leyendo:                    
              
                                 call              prc_leer_char
@@ -449,7 +448,7 @@ prc_imprimir_bytehex2hex proc
 
                                 ret
 prc_imprimir_bytehex2hex endp
-    ; imprime el byte que este en cl a binario
+
 prc_imprimir_bytehex2bin proc
                                 mov               ah, 0
                                 mov               al, cl
@@ -504,7 +503,7 @@ prc_leer_numero proc
     borrar:                     
                                 mov               dx, 0
                                 mov               ax, cx
-                                div               ten                                       ; ax/10, quita el ultimo digito
+                                div               ten                                      
                                 mov               cx, ax
                                 imprimir_caracter ' '
                                 imprimir_caracter 8
@@ -520,9 +519,9 @@ prc_leer_numero proc
                                 cmp               al, '9'
                                 jbe               numero_verificado
     quitar_caracter_nonum:      
-                                imprimir_caracter 8                                         ; mueve el cursor a la izquierda
-                                imprimir_caracter ' '                                       ; pone espacio
-                                imprimir_caracter 8                                         ; vuelve a mover el cursor
+                                imprimir_caracter 8                                        
+                                imprimir_caracter ' '                                      
+                                imprimir_caracter 8                                        
                                 jmp               leer_digito
     numero_verificado:          
 

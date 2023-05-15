@@ -87,8 +87,8 @@ endm
     ;cosas generales
     newline                  db 10,13,'$'
     waitvar                  db 0
-    msgsalida                db 'Saliendo...',10,13,'$'
-    msgprestecla             db 'Presione una tecla para continuar...',10,13,'$'
+    msgsalida                db 'Saliendo del programa...',10,13,'$'
+    msgprestecla             db 'Digite una tecla para continuar...',10,13,'$'
 
     ;relacionado a contraseñas
     nummaxintentos           dw 3

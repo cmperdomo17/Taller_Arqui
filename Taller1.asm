@@ -89,6 +89,7 @@ endm
     waitvar                  db 0
     msgsalida                db 'Saliendo del programa...',10,13,'$'
     msgprestecla             db 'Digite una tecla para continuar...',10,13,'$'
+    msgdivisorcero           db 'No se puede dividir por 0.',10,13,'$'
 
     ;relacionado a contraseñas
     nummaxintentos           dw 3
@@ -214,6 +215,12 @@ main proc near
                                 jmp               opcion_2
     link_opcion_3:              
                                 jmp               opcion_3
+
+    presionar_tecla:
+                                imprimir msgprestecla
+                                leer_char waitvar
+                                call prc_limpiar_pantalla
+                                jmp volver_al_menu
     ; opciones
     opcion_1:                   
                                 call              prc_limpiar_pantalla
@@ -253,15 +260,33 @@ main proc near
                                 imprimir          newline
                                 imprimir_numero   bx
 
-                                mov               ax, num1
-                                idiv              num2
-                                mov               bx, ax
-                                imprimir          newline
-                                imprimir          msgdivision
-                                imprimir          newline
-                                imprimir_numero   bx
-                                imprimir          newline
-                                jmp               volver_al_menu
+                                mov ax, num1
+                                mov bx, num2
+                                cmp bx, 0
+                                je division_por_cero ; Salta a la etiqueta si el divisor es igual a 0
+                                idiv bx ; Divide el valor de num1 (dividendo) por el valor de num2 (divisor)
+                                mov bx, ax ; Guarda el cociente en BX
+                                imprimir newline
+                                imprimir msgdivision
+                                imprimir newline
+                                imprimir_numero bx
+                                imprimir newline
+                                jmp volver_al_menu
+
+
+    division_por_cero:
+                                imprimir newline
+                                imprimir msgdivisorcero
+                                imprimir newline
+                                jmp volver_al_menu
+
+    imprimir_resultado:
+                                imprimir newline
+                                imprimir msgdivision
+                                imprimir newline
+                                imprimir_numero bx
+                                imprimir newline
+                                jmp volver_al_menu
 
     opcion_3:                   
                                 call              prc_limpiar_pantalla
@@ -542,11 +567,11 @@ prc_leer_numero proc
     ;suma lo leido a cx
                                 push              ax
                                 mov               ah, 0
-                                mov               dx, cx                                    ; guarda en caso de overflow
+                                mov               dx, cx                                    
                                 add               cx, ax
                                 pop               ax
                                 call              prc_verificar_limites
-                                ja                overflow_por_suma                         ; si el numero pasa los limites quita lo ingresado
+                                ja                overflow_por_suma                         
 
                                 jmp               leer_digito
 
@@ -572,7 +597,7 @@ prc_leer_numero proc
                                 pop               dx
                                 ret
 prc_leer_numero endp
-    ; verifica si cx esta dentro del rango deseado
+    
 prc_verificar_limites proc
     verificar_flag_signo:       
                                 cmp               flgnegativo, 0
@@ -587,7 +612,7 @@ prc_verificar_limites proc
     retornar:                   
                                 ret
 prc_verificar_limites endp
-    ; imprime un numero en ax
+    
 prc_imprimir_signumero proc
                                 push              dx
                                 push              ax
@@ -597,7 +622,7 @@ prc_imprimir_signumero proc
                                 jmp               fin_impresign
 
     verificar_signo:            
-                                cmp               ax, 0                                     ; afecta las banderas (Nos interesa la de signo)
+                                cmp               ax, 0                                     
                                 jns               positivo
                                 neg               ax
                                 imprimir_caracter '-'

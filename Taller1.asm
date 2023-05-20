@@ -172,14 +172,43 @@ main proc near
                                 cargar_datos
                                 mov               cx, nummaxintentos
                                 call              prc_limpiar_pantalla
+                                mov               si, 0
     autenticacion:              
                                 imprimir          msgcontrasenia
-                                leer_string       contraseniaingresada, 7                 
-                                push              cx
-                                comparar_string   contrasenia, contraseniaingresada[2],6
+                                
+                                mov               ax, @data
+                                mov               ds, ax
+                                mov               bx, offset contrasenia
+
+                                mov               cx, 6
+    x:                          
+                                mov               ah, 8
+                                int               21h
+                                push              ax
+                                push              [bx]
+                                inc               bx
+                                mov               ah, 2
+                                mov               dl, '*'
+                                int               21h
+                                loop              x
+
+                                mov               cx, 6
+    y:                          
+                                pop               ax
+                                pop               bx
+                                cmp               al, bl
+                                loop              y
+                                
+                                imprimir          newline
+
+                                mov               ah, 9
                                 je                autenticado
-                                pop               cx
-                                loop              autenticacion
+
+                                inc               si
+
+                                cmp               si, 3
+
+                                jne               autenticacion
 
                                 imprimir          msgcontraseniaincorrecta
                                 imprimir          msgsalida
@@ -187,7 +216,6 @@ main proc near
                                 leer_char         waitvar
                                 mov               ah,4ch
                                 int               21h
-                            
 
     autenticado:                
                                 call              prc_limpiar_pantalla
@@ -216,11 +244,11 @@ main proc near
     link_opcion_3:              
                                 jmp               opcion_3
 
-    presionar_tecla:
-                                imprimir msgprestecla
-                                leer_char waitvar
-                                call prc_limpiar_pantalla
-                                jmp volver_al_menu
+    presionar_tecla:            
+                                imprimir          msgprestecla
+                                leer_char         waitvar
+                                call              prc_limpiar_pantalla
+                                jmp               volver_al_menu
     ; opciones
     opcion_1:                   
                                 call              prc_limpiar_pantalla
@@ -260,33 +288,33 @@ main proc near
                                 imprimir          newline
                                 imprimir_numero   bx
 
-                                mov ax, num1
-                                mov bx, num2
-                                cmp bx, 0
-                                je division_por_cero ; Salta a la etiqueta si el divisor es igual a 0
-                                idiv bx ; Divide el valor de num1 (dividendo) por el valor de num2 (divisor)
-                                mov bx, ax ; Guarda el cociente en BX
-                                imprimir newline
-                                imprimir msgdivision
-                                imprimir newline
-                                imprimir_numero bx
-                                imprimir newline
-                                jmp volver_al_menu
+                                mov               ax, num1
+                                mov               bx, num2
+                                cmp               bx, 0
+                                je                division_por_cero              ; Salta a la etiqueta si el divisor es igual a 0
+                                idiv              bx                             ; Divide el valor de num1 (dividendo) por el valor de num2 (divisor)
+                                mov               bx, ax                         ; Guarda el cociente en BX
+                                imprimir          newline
+                                imprimir          msgdivision
+                                imprimir          newline
+                                imprimir_numero   bx
+                                imprimir          newline
+                                jmp               volver_al_menu
 
 
-    division_por_cero:
-                                imprimir newline
-                                imprimir msgdivisorcero
-                                imprimir newline
-                                jmp volver_al_menu
+    division_por_cero:          
+                                imprimir          newline
+                                imprimir          msgdivisorcero
+                                imprimir          newline
+                                jmp               volver_al_menu
 
-    imprimir_resultado:
-                                imprimir newline
-                                imprimir msgdivision
-                                imprimir newline
-                                imprimir_numero bx
-                                imprimir newline
-                                jmp volver_al_menu
+    imprimir_resultado:         
+                                imprimir          newline
+                                imprimir          msgdivision
+                                imprimir          newline
+                                imprimir_numero   bx
+                                imprimir          newline
+                                jmp               volver_al_menu
 
     opcion_3:                   
                                 call              prc_limpiar_pantalla
@@ -374,16 +402,16 @@ prc_cambiar_color proc
                                 int               10h
 
                                 mov               ax, 1003h
-                                mov               bx, 0                                     
+                                mov               bx, 0
                                 int               10h
                          
                                 mov               ah, 06h
                                 xor               al, al
                                 xor               cx, cx
-                                mov dh, 79
-                                mov dl, 79
+                                mov               dh, 79
+                                mov               dl, 79
                                 mov               dx, 184fh
-                                mov               bh, 17h                
+                                mov               bh, 17h
                                 int               10h
                                 ret
 prc_cambiar_color endp
@@ -404,7 +432,7 @@ prc_leer_string endp
 prc_leer_hex proc
                                 mov               cx ,2
                                 mov               bl, 0
-                                mov               ax ,0                                     
+                                mov               ax ,0
     leyendo:                    
              
                                 call              prc_leer_char
@@ -528,7 +556,7 @@ prc_leer_numero proc
     borrar:                     
                                 mov               dx, 0
                                 mov               ax, cx
-                                div               ten                                      
+                                div               ten
                                 mov               cx, ax
                                 imprimir_caracter ' '
                                 imprimir_caracter 8
@@ -544,9 +572,9 @@ prc_leer_numero proc
                                 cmp               al, '9'
                                 jbe               numero_verificado
     quitar_caracter_nonum:      
-                                imprimir_caracter 8                                        
-                                imprimir_caracter ' '                                      
-                                imprimir_caracter 8                                        
+                                imprimir_caracter 8
+                                imprimir_caracter ' '
+                                imprimir_caracter 8
                                 jmp               leer_digito
     numero_verificado:          
 
@@ -567,11 +595,11 @@ prc_leer_numero proc
     ;suma lo leido a cx
                                 push              ax
                                 mov               ah, 0
-                                mov               dx, cx                                    
+                                mov               dx, cx
                                 add               cx, ax
                                 pop               ax
                                 call              prc_verificar_limites
-                                ja                overflow_por_suma                         
+                                ja                overflow_por_suma
 
                                 jmp               leer_digito
 
@@ -622,7 +650,7 @@ prc_imprimir_signumero proc
                                 jmp               fin_impresign
 
     verificar_signo:            
-                                cmp               ax, 0                                     
+                                cmp               ax, 0
                                 jns               positivo
                                 neg               ax
                                 imprimir_caracter '-'
@@ -638,30 +666,30 @@ prc_imprimir_numero proc near
                                 push              bx
                                 push              cx
                                 push              dx
-                                mov               cx,1                                      ; hay ceros
-                                mov               bx, 10000                                 ; maximos digitos
+                                mov               cx,1                           ; hay ceros
+                                mov               bx, 10000                      ; maximos digitos
                                 cmp               ax, 0
                                 jz                imprimir_cero
     impresion:                  
-                                cmp               bx,0                                      ; si el divisor es cero, ya no quedan digitos
+                                cmp               bx,0                           ; si el divisor es cero, ya no quedan digitos
                                 jz                fin_impresion
                         
                                 cmp               cx, 0
                                 je                extraer_digito
                                 cmp               ax, bx
-                                jb                reducir_divisor                           ; si el resto es mayor al divisor, reducir el divisor
+                                jb                reducir_divisor                ; si el resto es mayor al divisor, reducir el divisor
     extraer_digito:             
-                                mov               cx, 0                                     ; no hay ceros
+                                mov               cx, 0                          ; no hay ceros
                                 mov               dx,0
-                                div               bx                                        ; divide ax por bx y guarda en al, y guarda el resto en dx
+                                div               bx                             ; divide ax por bx y guarda en al, y guarda el resto en dx
                                 add               al, 30h
                                 imprimir_caracter al
-                                mov               ax, dx                                    ; guarda el resto para extraer mas caracteres
+                                mov               ax, dx                         ; guarda el resto para extraer mas caracteres
     reducir_divisor:            
-                                push              ax                                        ; guarda ax, porque la division lo usa
+                                push              ax                             ; guarda ax, porque la division lo usa
                                 mov               dx, 0
                                 mov               ax, bx
-                                div               ten                                       ; quita un digito al divisor
+                                div               ten                            ; quita un digito al divisor
                                 mov               bx, ax
                                 pop               ax
                                 jmp               impresion

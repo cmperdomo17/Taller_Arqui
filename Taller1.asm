@@ -1,4 +1,4 @@
-;MACROS
+;macros
 
 cargar_datos macro
                  mov ax, @data

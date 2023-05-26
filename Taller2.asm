@@ -1,10 +1,20 @@
 extern printf, scanf, system
 
 section .data
-    msjClavell db "Ingrese su clave ",10,0
+    
     msjHexAnd db "Aplicando AND con los 2 numeros: %s BIN y %x HEX",10,0
     msjHexOr db "Aplicando OR con los 2 numeros: %s BIN y %x HEX",10,0
     msjHexXor db "Aplicando XOR con los 2 numeros: %s BIN y %x HEX",10,0
+    tamanioOperador db "%x"
+    tamanioClave equ 6
+    contraseniaIng db "%ld",0
+    ocultarClave db "stty -echo",0
+    mostrarClave db "stty echo",0
+    msjMenu db " ", 0x0a, 8, 13
+    msjOp1 db "1. Realizar Suma y Resta con numeros en rango -16384 a 16383", 0x0a, 8, 14
+    msjOp2 db "2. Realizar Multiplicacion y Division con numeros en rango -128 a 127", 0x0a, 8, 14
+    msjOp3 db "3. Realizar operaciones logicas con numeros hexadecimales", 0x0a, 8, 14
+    msjOp4 db "4. Salir", 0x0a, 8, 14
     range1 dq -16384
     range2 dq 16383
     tamanioNum db "%d"
@@ -16,26 +26,17 @@ section .data
     msjResultResta db "Resta: %ld ",10,0
     msjResultMult db "Multiplicacion: %ld",10,0
     msjResultDiv db "Division: %ld ",10,0
-    tamanioOperador db "%x"
+    msjClavell db "Ingrese su clave ",10,0
     msjNum1Bin db "Primer numero en Binario: %s ",10,0
     msjNum1BinNot db "Aplicando NOT: %s ",10,0
     msjNum2Bin db "Segundo numero en Binario: %s ",10,0
     msjNum2BinNot db "Aplicando NOT: %s ",10,0
     num1 dq 0
     num2 dq 0
-    contraseniaIng db "%ld",0
-    ocultarClave db "stty -echo",0
-    mostrarClave db "stty echo",0
-    msjMenu db " ", 0x0a, 8, 13
-    msjOp1 db "1. Realizar Suma y Resta con numeros en rango -16384 a 16383", 0x0a, 8, 14
-    msjOp2 db "2. Realizar Multiplicacion y Division con numeros en rango -128 a 127", 0x0a, 8, 14
-    msjOp3 db "3. Realizar operaciones logicas con numeros hexadecimales", 0x0a, 8, 14
-    msjOp4 db "4. Salir", 0x0a, 8, 14
     contrasenia dq 123456
     msjClave db " ", 0x0a
              db "Digite la contrasenia: ", 0x0a, 0
     msjError db "Digite la contrasenia: ", 0x0a, 0
-    tamanioClave equ 6
 
 section .bss
     resultado resq 1
